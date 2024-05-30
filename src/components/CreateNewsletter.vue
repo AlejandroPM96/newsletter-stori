@@ -1,5 +1,12 @@
 <template>
   <div class="upload-form">
+    <input
+      type="text"
+      v-model="newsletterName"
+      placeholder="Insert Newsletter Name"
+      class="recipient-input"
+    />
+    <br />
     <input type="file" accept=".pdf,.png" @change="handleFileChange" class="file-input" />
     <div v-if="file" class="file-info">
       <h3>Selected File:</h3>
@@ -37,6 +44,9 @@
 </template>
 
 <script>
+import { storage } from '../firebase/config'
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
+import { useUploadStore } from '../stores/newsletter'
 export default {
   data() {
     return {
@@ -46,7 +56,8 @@ export default {
       emailList: '',
       errorMessage: '',
       emailText: '',
-      subject: ''
+      subject: '',
+      newsletterName: ''
     }
   },
   methods: {
@@ -80,6 +91,43 @@ export default {
     removeRecipient(index) {
       this.recipientList.splice(index, 1)
     },
+    uploadFile(file) {
+      // getting name & type properties from File object
+      const { name, type } = file
+      // create a reference to file in firebase
+      const storageRef = ref(storage, name)
+      // upload file (this.file) to firebase and append metadata
+      const uploadTask = uploadBytesResumable(storageRef, this.file, {
+        contentType: type
+      })
+
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          console.log('Upload is ' + progress + '% done')
+        },
+        (error) => {
+          console.log(error)
+        },
+        () => {
+          console.log('successful upload.')
+          const uploadStore = useUploadStore()
+          try {
+            uploadStore.submitForm(
+              this.file.name,
+              this.recipientList,
+              this.newsletterName,
+              this.emailText,
+              this.subject
+            )
+          } catch (error) {
+            console.error('Error submitting form:', error)
+            // Handle error as needed
+          }
+        }
+      )
+    },
     submitForm() {
       if (this.recipientList.length === 0) {
         this.errorMessage = 'Recipient list cannot be empty.'
@@ -89,7 +137,14 @@ export default {
         this.errorMessage = 'No file selected.'
         return
       }
-      // Implement submission logic here
+      // submission logic here
+      try {
+        this.uploadFile(this.file)
+        // Use snapshot.ref.name as the filename
+      } catch (error) {
+        console.error('Error uploading file:', error)
+        // Handle error as needed
+      }
       console.log('File:', this.file)
       console.log('Recipient List:', this.recipientList)
       this.errorMessage = ''

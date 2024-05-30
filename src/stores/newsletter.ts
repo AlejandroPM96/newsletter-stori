@@ -7,17 +7,26 @@ export const useUploadStore = defineStore('upload', {
     errorMessage: ''
   }),
   actions: {
-    async submitForm(file: string, recipientList: string[]) {
+    async submitForm(
+      fileName: string,
+      recipientList: string[],
+      newsletterName: string,
+      emailText: string,
+      emailSubject: string
+    ) {
       try {
         // Prepare form data
         const formData = new FormData()
-        formData.append('file', file)
+        formData.append('name', newsletterName)
+        formData.append('subject', emailSubject)
+        formData.append('text', emailText)
+        formData.append('attachmentPath', fileName)
         formData.append('recipientList', JSON.stringify(recipientList))
 
         // Make API request
-        const response = await axios.post('https://newsletterapi', formData, {
+        const response = await axios.post('http://localhost:3000/register-newsletter', formData, {
           headers: {
-            'Content-Type': 'multipart/form-data'
+            'Content-Type': 'application/json'
           }
         })
 
