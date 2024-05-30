@@ -7,6 +7,15 @@
     </div>
     <div class="recipient-section">
       <textarea
+        v-model="emailText"
+        placeholder="Please insert the text you want to be read on newsletter email"
+        class="email-list-input"
+      ></textarea>
+      <input type="text" v-model="subject" placeholder="Add Subject" class="recipient-input" />
+    </div>
+    <div class="recipient-section">
+      <h3>Recipients</h3>
+      <textarea
         v-model="emailList"
         placeholder="Paste or type a list of emails separated by commas"
         class="email-list-input"
@@ -16,13 +25,13 @@
       <br />
       <input type="text" v-model="newRecipient" placeholder="Add Email" class="recipient-input" />
       <button @click="addRecipient" class="add-button">Add</button>
-      <br />
-      <br />
-      <h3>Recipient List</h3>
-      <div v-for="(email, index) in recipientList" :key="index" class="recipient-item">
-        {{ email }} <button @click="removeRecipient(index)" class="remove-button">Remove</button>
-      </div>
+      <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
     </div>
+    <h3>Recipient List</h3>
+    <div v-for="(email, index) in recipientList" :key="index" class="recipient-item">
+      {{ email }} <button @click="removeRecipient(index)" class="remove-button">Remove</button>
+    </div>
+    <br />
     <button @click="submitForm" class="submit-button">Submit</button>
   </div>
 </template>
@@ -34,31 +43,56 @@ export default {
       file: null,
       recipientList: [],
       newRecipient: '',
-      emailList: ''
+      emailList: '',
+      errorMessage: '',
+      emailText: '',
+      subject: ''
     }
   },
   methods: {
     handleFileChange(event) {
       this.file = event.target.files[0]
     },
+    isValidEmail(email) {
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      return emailPattern.test(email)
+    },
     addRecipient() {
-      if (this.newRecipient) {
+      if (this.isValidEmail(this.newRecipient)) {
         this.recipientList.push(this.newRecipient)
         this.newRecipient = ''
+        this.errorMessage = ''
+      } else {
+        this.errorMessage = 'Invalid email address.'
       }
     },
     addEmailList() {
       const emails = this.emailList.split(',').map((email) => email.trim())
-      this.recipientList = [...this.recipientList, ...emails.filter((email) => email)]
-      this.emailList = ''
+      const invalidEmails = emails.filter((email) => !this.isValidEmail(email))
+      if (invalidEmails.length > 0) {
+        this.errorMessage = 'One or more email addresses are invalid: ' + invalidEmails.join(', ')
+      } else {
+        this.recipientList = [...this.recipientList, ...emails]
+        this.emailList = ''
+        this.errorMessage = ''
+      }
     },
     removeRecipient(index) {
       this.recipientList.splice(index, 1)
     },
     submitForm() {
+      if (this.recipientList.length === 0) {
+        this.errorMessage = 'Recipient list cannot be empty.'
+        return
+      }
+      if (!this.file) {
+        this.errorMessage = 'No file selected.'
+        return
+      }
       // Implement submission logic here
       console.log('File:', this.file)
       console.log('Recipient List:', this.recipientList)
+      this.errorMessage = ''
     }
   }
 }
@@ -130,5 +164,10 @@ export default {
 
 .recipient-item {
   margin-bottom: 5px;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
 }
 </style>

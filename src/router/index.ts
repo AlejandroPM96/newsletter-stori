@@ -25,12 +25,17 @@ const router = createRouter({
         {
           path: 'CreateNewsletter',
           name: 'CreateNewsletter',
-          component: () => import('../components/CreateNewsletter.vue') // Lazy-loaded Tab1 component
+          component: () => import('../components/CreateNewsletter.vue')
         },
         {
           path: 'NewsletterDashboard',
           name: 'NewsletterDashboard',
-          component: () => import('../components/NewsletterDashboard.vue') // Lazy-loaded Tab2 component
+          component: () => import('../components/NewsletterDashboard.vue')
+        },
+        {
+          path: 'LaunchNewsletter',
+          name: 'LaunchNewsletter',
+          component: () => import('../components/LaunchNewsletter.vue')
         }
       ]
     },

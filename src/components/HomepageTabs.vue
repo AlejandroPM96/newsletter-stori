@@ -4,7 +4,12 @@
       <router-link
         to="/home/CreateNewsletter"
         :class="{ active: $route.name === 'CreateNewsletter' }"
-        >Create Newsletter</router-link
+        >Register Newsletter</router-link
+      >
+      <router-link
+        to="/home/LaunchNewsletter"
+        :class="{ active: $route.name === 'LaunchNewsletter' }"
+        >Launch Newsletter</router-link
       >
       <router-link
         to="/home/NewsletterDashboard"
