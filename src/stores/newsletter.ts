@@ -2,6 +2,8 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
 
+const apiUrl = import.meta.env.VITE_API_BASE_URL
+
 export const useUploadStore = defineStore('upload', {
   state: () => ({
     errorMessage: ''
@@ -24,7 +26,7 @@ export const useUploadStore = defineStore('upload', {
         formData.append('recipientList', JSON.stringify(recipientList))
 
         // Make API request
-        const response = await axios.post('http://localhost:3000/register-newsletter', formData, {
+        const response = await axios.post(apiUrl + '/register-newsletter', formData, {
           headers: {
             'Content-Type': 'application/json'
           }
@@ -35,6 +37,31 @@ export const useUploadStore = defineStore('upload', {
       } catch (error) {
         console.error('API Error:', error)
         // Handle error as needed
+      }
+    }
+  }
+})
+interface Newsletter {
+  name: string
+  recipients: number
+}
+interface NewsletterState {
+  newsletters: Newsletter[]
+}
+
+export const useNewsletterStore = defineStore('newsletter', {
+  state: (): NewsletterState => ({
+    newsletters: []
+  }),
+  actions: {
+    async fetchNewsletters() {
+      try {
+        const request_url = apiUrl + '/newsletters'
+        const response = await axios.get<Newsletter[]>(apiUrl + '/newsletters')
+        this.newsletters = response.data
+        console.log(request_url)
+      } catch (error) {
+        console.error('Error fetching newsletters:', error)
       }
     }
   }
