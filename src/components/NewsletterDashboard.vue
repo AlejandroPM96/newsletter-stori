@@ -76,11 +76,11 @@ export default defineComponent({
         const response = await axios.post(
           apiUrl + '/add-email',
           {
-            headers: { Authorization: 'Bearer ' + apiToken }
-          },
-          {
             email: newRecipient.value,
             name: selectedNewsletter.value
+          },
+          {
+            headers: { Authorization: 'Bearer ' + apiToken }
           }
         )
         isLoading.value = false

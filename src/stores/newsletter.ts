@@ -18,19 +18,17 @@ export const useUploadStore = defineStore('upload', {
       emailSubject: string
     ) {
       try {
-        // Prepare form data
-        const formData = new FormData()
-        formData.append('name', newsletterName)
-        formData.append('subject', emailSubject)
-        formData.append('text', emailText)
-        formData.append('attachmentPath', fileName)
-        formData.append('recipientList', JSON.stringify(recipientList))
-
         // Make API request
-        const response = await axios.post(apiUrl + '/register-newsletter', formData, {
-          headers: {
-            'Content-Type': 'application/json'
-          }
+        const url = apiUrl + '/register-newsletter'
+        const data = {
+          name: newsletterName,
+          subject: emailSubject,
+          text: emailText,
+          attachmentPath: fileName,
+          recipientList: recipientList
+        }
+        const response = await axios.post(apiUrl + '/register-newsletter', data, {
+          headers: { Authorization: 'Bearer ' + apiToken }
         })
 
         console.log('API Response:', response.data)

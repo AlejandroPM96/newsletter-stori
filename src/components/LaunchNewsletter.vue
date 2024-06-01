@@ -64,10 +64,10 @@ export default defineComponent({
         const response = await axios.post(
           apiUrl + '/send-newsletter',
           {
-            headers: { Authorization: 'Bearer ' + apiToken }
+            name: this.selectedNewsletter
           },
           {
-            name: this.selectedNewsletter
+            headers: { Authorization: 'Bearer ' + apiToken }
           }
         )
         this.launchMessage = `Successfully launched ${this.selectedNewsletter}!`

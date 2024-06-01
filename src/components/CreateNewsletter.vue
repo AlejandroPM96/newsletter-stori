@@ -39,14 +39,15 @@
       {{ email }} <button @click="removeRecipient(index)" class="remove-button">Remove</button>
     </div>
     <br />
-    <button @click="submitForm" class="submit-button">Submit</button>
+    <button :disabled="isLoading" @click="submitForm" class="submit-button">Submit</button>
+    <div v-if="isLoading" class="loading-circle"></div>
     <p v-if="registerMessage != ''" :class="['launch-message', { 'error-message': isError }]">
       {{ registerMessage }}
     </p>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { storage } from '../firebase/config'
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
 import { useUploadStore } from '../stores/newsletter'
@@ -63,7 +64,8 @@ export default {
       subject: '',
       newsletterName: '',
       registerMessage: '',
-      isError: false
+      isError: false,
+      isLoading: false
     }
   },
   methods: {
@@ -139,6 +141,8 @@ export default {
       )
     },
     submitForm() {
+      1
+      this.isLoading = true
       if (this.recipientList.length === 0) {
         this.errorMessage = 'Recipient list cannot be empty.'
         return
@@ -150,9 +154,10 @@ export default {
       // submission logic here
       try {
         this.uploadFile(this.file)
-        // Use snapshot.ref.name as the filename
+        this.isLoading = false
       } catch (error) {
         console.error('Error uploading file:', error)
+        this.isLoading = false
         // Handle error as needed
       }
       console.log('File:', this.file)
@@ -169,6 +174,9 @@ export default {
   border: 2px solid #007bff;
   border-radius: 10px;
   background-color: #f0f8ff;
+  max-width: 800px;
+  text-align: center;
+  margin: 0 auto;
 }
 
 .file-input {
@@ -234,5 +242,98 @@ export default {
 .error-message {
   color: red;
   margin-top: 10px;
+}
+.loading-circle {
+  border: 5px solid #f3f3f3; /* Light grey */
+  border-top: 5px solid #007bff; /* Blue (matches your theme) */
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 2s linear infinite;
+  margin: 20px auto;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+input[type='file'] {
+  outline: none;
+  padding: 4px;
+  margin: 10px;
+}
+
+input[type='file']:focus-within::file-selector-button,
+input[type='file']:focus::file-selector-button {
+  outline: 2px solid #0964b0;
+  outline-offset: 2px;
+}
+
+input[type='file']::before {
+  top: 16px;
+}
+
+input[type='file']::after {
+  top: 14px;
+}
+
+/* ------- From Step 2 ------- */
+
+input[type='file'] {
+  position: relative;
+}
+
+input[type='file']::file-selector-button {
+  width: 136px;
+  color: transparent;
+}
+
+/* Faked label styles and icon */
+input[type='file']::before {
+  position: absolute;
+  pointer-events: none;
+  /*   top: 11px; */
+  left: 40px;
+  color: #0964b0;
+  content: 'Upload File';
+}
+
+input[type='file']::after {
+  position: absolute;
+  pointer-events: none;
+  /*   top: 10px; */
+  left: 16px;
+  height: 20px;
+  width: 20px;
+  content: '';
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230964B0'%3E%3Cpath d='M18 15v3H6v-3H4v3c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-3h-2zM7 9l1.41 1.41L11 7.83V16h2V7.83l2.59 2.58L17 9l-5-5-5 5z'/%3E%3C/svg%3E");
+}
+
+/* ------- From Step 1 ------- */
+
+/* file upload button */
+input[type='file']::file-selector-button {
+  border-radius: 4px;
+  padding: 0 16px;
+  height: 40px;
+  cursor: pointer;
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.16);
+  box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.05);
+  margin-right: 16px;
+  transition: background-color 200ms;
+}
+
+/* file upload button hover state */
+input[type='file']::file-selector-button:hover {
+  background-color: #f3f4f6;
+}
+
+/* file upload button active state */
+input[type='file']::file-selector-button:active {
+  background-color: #e5e7eb;
 }
 </style>
