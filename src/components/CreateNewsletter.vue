@@ -40,6 +40,9 @@
     </div>
     <br />
     <button @click="submitForm" class="submit-button">Submit</button>
+    <p v-if="registerMessage != ''" :class="['launch-message', { 'error-message': isError }]">
+      {{ registerMessage }}
+    </p>
   </div>
 </template>
 
@@ -48,6 +51,7 @@ import { storage } from '../firebase/config'
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
 import { useUploadStore } from '../stores/newsletter'
 export default {
+  name: 'CreateNewsletter',
   data() {
     return {
       file: null,
@@ -57,7 +61,9 @@ export default {
       errorMessage: '',
       emailText: '',
       subject: '',
-      newsletterName: ''
+      newsletterName: '',
+      registerMessage: '',
+      isError: false
     }
   },
   methods: {
@@ -121,8 +127,12 @@ export default {
               this.emailText,
               this.subject
             )
+            this.registerMessage = 'Successfully Registered '
+            this.isError = false
           } catch (error) {
             console.error('Error submitting form:', error)
+            this.registerMessage = 'Failed to launch the newsletter. Please try again.'
+            this.isError = true
             // Handle error as needed
           }
         }

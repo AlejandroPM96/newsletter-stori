@@ -4,8 +4,7 @@
       <img src="@/assets/logo.png" alt="Logo" />
     </div>
     <div class="navbar-links">
-      <router-link to="/home">Home</router-link>
-      <router-link to="/about">About</router-link>
+      <router-link v-if="isAuthenticated" to="/home">Home</router-link>
       <button @click="logout" v-if="isAuthenticated" class="logout-button">Log out</button>
       <router-link to="/login" v-if="!isAuthenticated">Log in</router-link>
     </div>

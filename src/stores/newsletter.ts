@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 
 const apiUrl = import.meta.env.VITE_API_BASE_URL
+const apiToken = import.meta.env.VITE_API_TOKEN
 
 export const useUploadStore = defineStore('upload', {
   state: () => ({
@@ -57,7 +58,9 @@ export const useNewsletterStore = defineStore('newsletter', {
     async fetchNewsletters() {
       try {
         const request_url = apiUrl + '/newsletters'
-        const response = await axios.get<Newsletter[]>(apiUrl + '/newsletters')
+        const response = await axios.get<Newsletter[]>(apiUrl + '/newsletters', {
+          headers: { Authorization: 'Bearer ' + apiToken }
+        })
         this.newsletters = response.data
         console.log(request_url)
       } catch (error) {

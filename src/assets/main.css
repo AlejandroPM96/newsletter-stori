@@ -2,17 +2,3 @@
 
 #app {
 }
-
-a,
-.blue {
-  text-decoration: none;
-  color: rgb(0, 120, 189);
-  transition: 0.4s;
-  padding: 3px;
-}
-
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(249, 100%, 37%, 0.2);
-  }
-}
