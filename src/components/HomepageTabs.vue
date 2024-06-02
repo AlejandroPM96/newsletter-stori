@@ -20,11 +20,7 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'HomepageTabs'
-}
-</script>
+<script setup lang="ts"></script>
 
 <style scoped>
 .tabs {

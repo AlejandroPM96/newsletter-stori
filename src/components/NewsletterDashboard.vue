@@ -52,6 +52,7 @@ export default defineComponent({
     const selectedNewsletterDetails = ref<any>(null)
     const newRecipient = ref<string>('')
     const isLoading = ref<boolean>(false)
+    const uniqueKey = 0
 
     onMounted(async () => {
       await newsletterStore.fetchNewsletters()
@@ -104,7 +105,8 @@ export default defineComponent({
       newRecipient,
       selectNewsletter,
       addRecipient,
-      isLoading
+      isLoading,
+      uniqueKey
     }
   },
   methods: {

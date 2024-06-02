@@ -84,7 +84,7 @@ export default defineComponent({
       console.log('reload')
       const newsletterStore = useNewsletterStore()
       await newsletterStore.fetchNewsletters()
-      this.uniqueKey.value++
+      this.uniqueKey++
     }
   }
 })
