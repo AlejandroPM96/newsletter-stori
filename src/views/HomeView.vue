@@ -3,7 +3,7 @@
     <h1>Newsletter Maker</h1>
     <p>
       There is a bit of a bug I couldn't narrow down. If there is no content on the 2nd and 3rd tab
-      just change in bewtween tabs a couple of times and content will appear
+      just change in bewtween tabs a couple of times and content will appear after like 5 seconds
     </p>
     <p>Sorry o(TヘTo)</p>
     <HomepageTabs></HomepageTabs>

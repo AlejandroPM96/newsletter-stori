@@ -22,11 +22,14 @@
     </div>
     <div class="recipient-section">
       <h3>Recipients</h3>
-      <textarea
+      <!-- <textarea
         v-model="emailList"
         placeholder="Paste or type a list of emails separated by commas"
         class="email-list-input"
-      ></textarea>
+        ></textarea>
+        <button @click="addEmailList" class="add-button">Add Emails</button> -->
+      <label for="file-input">Select a .txt file with comma separated email list:</label>
+      <input type="file" id="file-input-emails" @change="handleEmailFileChange" accept=".txt" />
       <button @click="addEmailList" class="add-button">Add Emails</button>
       <br />
       <br />
@@ -72,7 +75,20 @@ export default {
     handleFileChange(event) {
       this.file = event.target.files[0]
     },
+    handleEmailFileChange(event) {
+      const input = event.target as HTMLInputElement
+      if (input.files && input.files[0]) {
+        const file = input.files[0]
+        const reader = new FileReader()
+        reader.onload = () => {
+          const text = reader.result as string
+          this.emailList = text
+        }
+        reader.readAsText(file)
+      }
+    },
     isValidEmail(email) {
+      console.log('validating: ' + email)
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
       return emailPattern.test(email)
     },
@@ -86,8 +102,15 @@ export default {
       }
     },
     addEmailList() {
+      console.log(this.emailList)
       const emails = this.emailList.split(',').map((email) => email.trim())
-      const invalidEmails = emails.filter((email) => !this.isValidEmail(email))
+      // const invalidEmails = this.emails.filter((email) => !this.isValidEmail(email))
+      const invalidEmails = []
+      for (let i = 0; i < emails.length; i++) {
+        if (!this.isValidEmail(emails[i])) {
+          invalidEmails.push(emails[i])
+        }
+      }
       if (invalidEmails.length > 0) {
         this.errorMessage = 'One or more email addresses are invalid: ' + invalidEmails.join(', ')
       } else {
