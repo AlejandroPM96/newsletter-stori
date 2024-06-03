@@ -92,11 +92,13 @@ export default defineComponent({
 
 <style scoped>
 .newsletter-launcher {
+  max-width: 800px;
   padding: 20px;
   border: 2px solid #007bff;
   border-radius: 10px;
   background-color: #f0f8ff;
   text-align: center;
+  margin: 0 auto;
 }
 
 .newsletter-select {
