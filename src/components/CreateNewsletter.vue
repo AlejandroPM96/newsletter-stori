@@ -131,17 +131,18 @@ export default {
             )
             this.registerMessage = 'Successfully Registered '
             this.isError = false
+            this.isLoading = false
           } catch (error) {
             console.error('Error submitting form:', error)
             this.registerMessage = 'Failed to launch the newsletter. Please try again.'
             this.isError = true
+            this.isLoading = false
             // Handle error as needed
           }
         }
       )
     },
     submitForm() {
-      1
       this.isLoading = true
       if (this.recipientList.length === 0) {
         this.errorMessage = 'Recipient list cannot be empty.'
@@ -154,10 +155,8 @@ export default {
       // submission logic here
       try {
         this.uploadFile(this.file)
-        this.isLoading = false
       } catch (error) {
         console.error('Error uploading file:', error)
-        this.isLoading = false
         // Handle error as needed
       }
       console.log('File:', this.file)

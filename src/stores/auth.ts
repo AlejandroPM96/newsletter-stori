@@ -3,12 +3,12 @@ import { ref } from 'vue'
 
 export const useAuthStore = defineStore('auth', () => {
   const isAuthenticated = ref(false)
-  const hardcodedEmail = 'user@example.com'
-  const hardcodedPassword = 'password123'
+  const hardcodedEmail = 'admin@example.com'
+  const hardcodedPassword = import.meta.env.VITE_USER_PASSWORD
 
   function login(email: string, password: string) {
-    console.log('comparing')
-    console.log(email, password)
+    console.log(hardcodedPassword)
+    console.log(password)
     if (email === hardcodedEmail && password === hardcodedPassword) {
       isAuthenticated.value = true
     } else {

@@ -34,3 +34,4 @@ coverage
 .env.production
 .firebaserc
 firebase.json
+.firebase/hosting.ZGlzdA.cache

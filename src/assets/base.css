@@ -29,4 +29,13 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #0f4c81; /* Deep blue color for the text */
+  background: linear-gradient(
+    90deg,
+    #00bfff,
+    #1e90ff
+  ); /* Gradient background from cyan to dodger blue */
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }

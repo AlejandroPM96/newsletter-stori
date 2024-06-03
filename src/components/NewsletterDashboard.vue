@@ -40,14 +40,14 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue'
+import { defineComponent, ref, onMounted, computed } from 'vue'
 import { useNewsletterStore } from '../stores/newsletter'
 import axios from 'axios'
 
 export default defineComponent({
   setup() {
     const newsletterStore = useNewsletterStore()
-    const { newsletters } = newsletterStore
+    const newsletters = computed(() => newsletterStore.newsletters)
     const selectedNewsletter = ref<string>('')
     const selectedNewsletterDetails = ref<any>(null)
     const newRecipient = ref<string>('')
